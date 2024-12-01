@@ -37,28 +37,25 @@ class AdminController extends Controller
 
     public function AdminProfileStore(Request $request){
         $profileData = User::find(Auth::user()->id);
-        
-        if($request->photo != ''){
-            if($profileData->photo != ''){
-                $delete_form = public_path('uploads/admin_images/'. $profileData->photo);
-                unlink($delete_form);
-            }
 
+        $profileData->username = $request->username;
+        $profileData->name = $request->name;
+        $profileData->email = $request->email;
+        $profileData->phone = $request->phone;
+        $profileData->address = $request->address;
+
+        if($request->photo){
+            $delete_form = public_path('uploads/admin_images/'. $profileData->photo);
+            unlink($delete_form);
+            
             $file = $request->photo;
             $extension = $file->extension();
             $file_name = uniqid().'.'. $extension;
-            // return $file_name;
 
             $file->move(public_path('uploads/admin_images'), $file_name);
             $profileData['photo'] = $file_name;
         }
-        User::find(Auth::user()->id)->update([
-            'username' => $request->username,
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address'=> $request->address,
-        ]);
+        $profileData->save();
 
         $notification = array(
             'message' => "Admin Profile Updated Successfully",
