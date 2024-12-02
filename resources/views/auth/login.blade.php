@@ -39,45 +39,47 @@
                             <div class="inner-box">
                                 <h4>Sign in</h4>
                                 <form action="{{ route('login') }}" method="post" class="default-form">
+                                    @csrf
                                     <div class="form-group">
-                                        <label>Agent name</label>
-                                        <input type="text" name="name" required="">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Email address</label>
-                                        <input type="email" name="email" required="">
+                                        <label>Name/Email/Phone</label>
+                                        <input type="text" name="login" id="login" required="">
                                     </div>
                                     <div class="form-group">
                                         <label>Password</label>
-                                        <input type="password" name="name" required="">
+                                        <input type="password" name="password" id="password" required="">
                                     </div>
                                     <div class="form-group message-btn">
                                         <button type="submit" class="theme-btn btn-one">Sign in</button>
                                     </div>
                                 </form>
                                 <div class="othre-text">
-                                    <p>Have not any account? <a href="signup.html">Register Now</a></p>
+                                    <p>Have not any account? <a href="{{ route('register') }}">Register Now</a></p>
                                 </div>
                             </div>
                         </div>
                         <div class="tab" id="tab-2">
                             <div class="inner-box">
                                 <h4>Sign in</h4>
-                                <form action="signin.html" method="post" class="default-form">
+                                <form action="{{ route('register') }}" method="post" class="default-form">
+                                    @csrf
                                     <div class="form-group">
                                         <label>User name</label>
-                                        <input type="text" name="name" required="">
+                                        <input type="text" name="name" id="name" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Email address</label>
-                                        <input type="email" name="email" required="">
+                                        <input type="email" name="email" id="email" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Password</label>
-                                        <input type="password" name="name" required="">
+                                        <input type="password" name="password" id="password" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Confirm Password</label>
+                                        <input type="password" name="password_confirmation" id="password_confirmation" required>
                                     </div>
                                     <div class="form-group message-btn">
-                                        <button type="submit" class="theme-btn btn-one">Sign in</button>
+                                        <button type="submit" class="theme-btn btn-one">Register</button>
                                     </div>
                                 </form>
                                 <div class="othre-text">
