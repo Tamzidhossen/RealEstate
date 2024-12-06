@@ -52,14 +52,11 @@
                                         <button type="submit" class="theme-btn btn-one">Sign in</button>
                                     </div>
                                 </form>
-                                <div class="othre-text">
-                                    <p>Have not any account? <a href="{{ route('register') }}">Register Now</a></p>
-                                </div>
                             </div>
                         </div>
                         <div class="tab" id="tab-2">
                             <div class="inner-box">
-                                <h4>Sign in</h4>
+                                <h4>Register</h4>
                                 <form action="{{ route('register') }}" method="post" class="default-form">
                                     @csrf
                                     <div class="form-group">
@@ -82,9 +79,6 @@
                                         <button type="submit" class="theme-btn btn-one">Register</button>
                                     </div>
                                 </form>
-                                <div class="othre-text">
-                                    <p>Have not any account? <a href="signup.html">Register Now</a></p>
-                                </div>
                             </div>
                         </div>
                     </div>

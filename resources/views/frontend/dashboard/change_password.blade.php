@@ -5,10 +5,10 @@
  <section class="page-title centred" style="background-image: url({{ asset('frontend/assets') }}/images/background/page-title-5.jpg);">
     <div class="auto-container">
         <div class="content-box clearfix">
-            <h1>User Profile </h1>
+            <h1>Change Password </h1>
             <ul class="bread-crumb clearfix">
                 <li><a href="index.html">Home</a></li>
-                <li>User Profile </li>
+                <li>Change Password </li>
             </ul>
         </div>
     </div>
@@ -35,7 +35,7 @@
     <div class="blog-sidebar">
       <div class="sidebar-widget post-widget">
             <div class="widget-title">
-                <h4>User Profile </h4>
+                <h4>Change Password </h4>
             </div>
             <div class="post-inner">
                 <div class="post">
@@ -71,32 +71,25 @@
                                 
                               
   
-<form action="{{ route('user.profile.store') }}" method="post" class="default-form" enctype="multipart/form-data">
+<form action="{{ route('user.password.update') }}" method="post" class="default-form">
     @csrf
 <div class="form-group">
-    <label>User Name</label>
-    <input type="text" name="username" value="{{ $UserData->username }}">
+    <label>Current Password</label>
+    <input type="password" name="old_password" class="form-control @error('old_password') is-invalid @enderror" id="old_password"  placeholder="Old Password">
+    @error('old_password')
+        <strong class="text-danger">{{ $message }}</strong>
+    @enderror
 </div>
 <div class="form-group">
-    <label>Name</label>
-    <input type="text" name="name" value="{{ $UserData->name }}">
+    <label>New Password</label>
+    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password"  placeholder="Password">
+    @error('password')
+        <strong class="text-danger">{{ $message }}</strong>
+    @enderror
 </div>
 <div class="form-group">
-    <label>Email</label>
-    <input type="email" name="email" value="{{ $UserData->email }}">
-</div>
-<div class="form-group">
-    <label>Phone</label>
-    <input type="text" name="phone" value="{{ $UserData->phone }}">
-</div>
-<div class="form-group">
-    <label>Address</label>
-    <input type="text" name="address" value="{{ $UserData->address }}">
-</div>
-<div class="form-group">
-    <label for="formFile" class="form-label">Default file input example</label>
-<input class="form-control" name="photo" type="file" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])">
-<div class="my-2"><img class="wd-80  shadow" src="{{ (!empty($UserData->photo)) ? asset('uploads/user_images/'.$UserData->photo) :  asset('uploads/no_image.jpg') }}" id="blah" alt="" width="150"></div>
+    <label>Confirm Password</label>
+    <input type="password" name="password_confirmation" class="form-control" id="password_confirmation"  placeholder="Confirm Password">
 </div>
 
 
@@ -125,7 +118,7 @@
 
 <!-- subscribe-section -->
 <section class="subscribe-section bg-color-3">
-    <div class="pattern-layer" style="background-image: url(assets/images/shape/shape-2.png);"></div>
+    <div class="pattern-layer" style="background-image: url({{ asset('frontend/assets') }}/images/shape/shape-2.png);"></div>
     <div class="auto-container">
         <div class="row clearfix">
             <div class="col-lg-6 col-md-6 col-sm-12 text-column">
