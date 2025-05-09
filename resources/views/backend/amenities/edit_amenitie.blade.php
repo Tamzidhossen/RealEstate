@@ -8,13 +8,16 @@
     <div class="row">
         <div class="card">
             <div class="card-body">
-                <h6 class="card-title">Add Amenities</h6>
+                <h6 class="card-title">Edit Amenities</h6>
 
-                <form id="myForm" action="{{ route('store.amenitie') }}" method="POST" class="forms-sample">
+                <form id="myForm" action="{{ route('update.amenitie') }}" method="POST" class="forms-sample">
                     @csrf
+
+                    <input type="hidden" name="id" value="{{ $amenities->id }}">
+
                     <div class="form-group mb-3">
                         <label for="exampleInputUsername1" class="form-label">Amenities Name</label>
-                        <input type="text" name="amenities_name" class="form-control">
+                        <input type="text" name="amenities_name" class="form-control" value="{{ $amenities->amenities_name }}">
                     </div>
 
                     <button type="submit" class="btn btn-primary me-2">Save Chenges</button>
