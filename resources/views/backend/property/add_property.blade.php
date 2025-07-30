@@ -192,8 +192,6 @@
                                     @foreach ($amenities as $amenitie)
                                         <option value="{{ $amenitie->id }}">{{ $amenitie->amenities_name }}</option>
                                     @endforeach
-                                    
-                                    
                                 </select>
                             </div>
                         </div><!-- Col -->
@@ -209,6 +207,35 @@
                             </div>
                         </div><!-- Col -->
                     </div><!-- Row -->
+
+                    <div class="col-sm-12">
+                        <div class="mb-3">
+                            <label class="form-label">Short Description</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+                    </div><!-- Col -->
+                    <div class="col-sm-12">
+                        <div class="mb-3">
+                            <label class="form-label">Long Description</label>
+                            <textarea class="form-control" name="tinymce" id="tinymceExample" rows="5"></textarea>
+                        </div>
+                    </div><!-- Col -->
+
+                    <div class="mb-3">
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" name="featured" value="1" class="form-check-input" id="checkInline1">
+                            <label class="form-check-label" for="checkInline1">
+                                Featured Property
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" name="hot" value="1" class="form-check-input" id="checkInline">
+                            <label class="form-check-label" for="checkInline">
+                                Hot Property
+                            </label>
+                        </div>
+                    </div>
+
                 </form>
                 <button type="button" class="btn btn-primary submit">Submit form</button>
             </div>
