@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Backend;
 
 use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\Drivers\Gd\Driver;
 use App\Http\Controllers\Controller;
 use App\Models\Amenities;
+use App\Models\Facility;
+use App\Models\MultiImage;
 use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\User;
@@ -35,17 +37,17 @@ class PropertyController extends Controller
         // dd($amenities);      //Check amenities array value
 
         $img = $request->file('property_thambnail');
-        $extension = $img->exectension();
+        $extension = $img->extension();
         $file_name = uniqid().'.'.$extension;
 
         // create new manager instance with desired driver
         $manager = new ImageManager(new Driver());
         $image = $manager->read($img);
         $image->resize(200, 150);
-        $image->save('upload/property/thambnail/'.$file_name);
+        $image->save('uploads/property/thambnail/'.$file_name);
 
-        $property_id = Property::insertGetId([
-            'ptype_id' => $request->ptype_id,
+        $property_id = Property::insertGetId([      //Return the ID of the inserted item
+            'ptype_id' => $request->property_id,
             'amenities_id' => $amenities,
             'property_name' => $request->property_name,
             'property_slug' => Str::lower(str_replace(' ', '-', $request->property_name)).'-'.random_int(10000, 99999),
@@ -78,6 +80,44 @@ class PropertyController extends Controller
             'status' => 1,
             'created_at' => Carbon::now(),
         ]);
-        
-    }
+
+        ///Multiple Image Upload From Here ///
+        $images = $request->file('multi_img');
+        foreach($images as $img){
+            $extensions = $img->extension();
+            $multi_name = uniqid().'.'.$extensions;
+
+            // create new manager instance with desired driver
+            $managers = new ImageManager(new Driver());
+            $imagei = $managers->read($img);
+            $imagei->resize(770, 520);
+            $imagei->save('uploads/property/multi_img/'.$multi_name);
+
+            MultiImage::insert([
+                'property_id' => $property_id,
+                'photo_name' => $multi_name,
+                'created_at' => Carbon::now(),
+            ]);
+        } //End foreach
+        ///End Multiple Image Upload From Here ///
+
+        ///Facilities Added From Here ///
+        $facilities = count($request->facility_name);
+        if($facilities != NULL){
+            for($i=0; $i < $facilities; $i++){
+                $cnt = new Facility();
+                $cnt->property_id = $property_id;
+                $cnt->facility_name = $request->facility_name[$i];
+                $cnt->distance = $request->distance[$i];
+                $cnt->save();
+            }
+        }
+
+        $notification = array(
+            'message' => "Property Inserted Successfully",
+            'alert-type' => 'success'
+        );
+        return redirect()->route('all.property')->with($notification);
+
+    } //End Method
 }
