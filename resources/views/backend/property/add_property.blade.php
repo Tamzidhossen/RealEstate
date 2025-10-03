@@ -216,8 +216,7 @@
                         </div>
                     </div>
 
-                    {{-- /////////////////// Facilities Option ///////////////--}}
-
+                    {{-- /////////////////// Start Facilities Options ///////////////--}}
                     <div class="row add_item">
                         <div class="col-md-4">
                             <div class="mb-3">
@@ -248,6 +247,7 @@
                             <a class="btn btn-success addeventmore"><i class="fa fa-plus-circle"></i> Add More..</a>
                         </div>
                     </div> <!---end row-->
+                    {{-- ////////////////// End Facilities Options //////////////////--}}
 
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </form>
@@ -413,6 +413,5 @@
         }
      });
     });
-     
-    </script>
+</script>
 @endsection

@@ -127,11 +127,13 @@ class PropertyController extends Controller
         $data = $property->amenities_id;        
         $ame_data = explode(',', $data);      //Convert string to array && Show all selected value
 
+        $facilities = Facility::where('property_id', $id)->get();
+        $multiImage = MultiImage::where('property_id', $id)->get();
         $propertyType = PropertyType::latest()->get();
         // dd($property->property_status);
         $amenities = Amenities::latest()->get();
         $activeAgent = User::where('status', 'active')->where('role', 'agent')->latest()->get();
-        return view('backend.property.edit_property', compact('property', 'propertyType', 'amenities', 'activeAgent', 'ame_data'));
+        return view('backend.property.edit_property', compact('property', 'propertyType', 'amenities', 'activeAgent', 'ame_data', 'multiImage', 'facilities'));
     } //End Method
 
     public function UpdateProperty(Request $request){
@@ -176,5 +178,127 @@ class PropertyController extends Controller
             'alert-type' => 'success'
         );
         return redirect()->route('all.property')->with($notification);
+    }
+
+    public function UpdatePropertyThambnail(Request $request){
+        $property_id = $request->id;
+        $oldImage = $request->old_img;
+
+        if(file_exists('uploads/property/thambnail/'.$oldImage)){
+            unlink('uploads/property/thambnail/'.$oldImage);
+        }
+
+        $img = $request->property_thambnail;
+        $extension = $img->extension();
+        $file_name = uniqid().'.'.$extension;
+
+        // create new manager instance with desired driver
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($img);
+        $image->resize(200, 150);
+        $image->save('uploads/property/thambnail/'.$file_name);
+
+
+        Property::findOrFail($property_id)->update([
+            'property_thambnail' => $file_name,
+            'updated_at' => Carbon::now(),
+        ]);
+
+        $notification = array(
+            'message' => "Property Image Thambnail Updated Successfully",
+            'alert-type' => 'success'
+        );
+        return redirect()->route('all.property')->with($notification);
+    } //End Method
+
+    public function UpdatePropertyMultiImage(Request $request){
+        $imgs = $request->multi_img;
+
+        if($imgs){
+            foreach($imgs as $id => $img){
+                $imgDel = MultiImage::findOrFail($id);
+                $oldImage = $imgDel->photo_name;
+                if(file_exists('uploads/property/multi_img/'.$oldImage)){
+                    unlink('uploads/property/multi_img/'.$oldImage);
+                }
+
+                $extensions = $img->extension();
+                $multi_name = uniqid().'.'.$extensions;
+
+                // create new manager instance with desired driver
+                $managers = new ImageManager(new Driver());
+                $imagei = $managers->read($img);
+                $imagei->resize(770, 520);
+                $imagei->save('uploads/property/multi_img/'.$multi_name);
+
+                MultiImage::where('id', $id)->update([
+                    'photo_name' => $multi_name,
+                    'updated_at' => Carbon::now(),
+                ]);
+            } //End foreach
+
+            $notification = array(
+                'message' => "Property Multi Image Updated Successfully",
+                'alert-type' => 'success'
+            );
+            return redirect()->route('all.property')->with($notification);
+        }else{
+            $notification = array(
+                'message' => "Nothing To Update",
+                'alert-type' => 'error'
+            );
+            return redirect()->route('all.property')->with($notification);
+        } //End else
+    } //End Method
+
+    public function DeletePropertyMultiImage($id){
+        $oldimg = MultiImage::findOrFail($id);
+        $img = $oldimg->photo_name;
+        if(file_exists('uploads/property/multi_img/'.$img)){
+            unlink('uploads/property/multi_img/'.$img);
+        }
+
+        MultiImage::findOrFail($id)->delete();
+
+        $notification = array(
+            'message' => "Property Multi Image Deleted Successfully",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    } //End Method
+
+    public function AddNewMultiImage(Request $request) {
+        $property_id = $request->property_id;
+        $images = $request->file('multi_img');
+        if($images){
+            foreach($images as $img){
+                $extensions = $img->extension();
+                $multi_name = uniqid().'.'.$extensions;
+
+                // create new manager instance with desired driver
+                $managers = new ImageManager(new Driver());
+                $imagei = $managers->read($img);
+                $imagei->resize(770, 520);
+                $imagei->save('uploads/property/multi_img/'.$multi_name);
+
+                MultiImage::insert([
+                    'property_id' => $property_id,
+                    'photo_name' => $multi_name,
+                    'created_at' => Carbon::now(),
+                ]);
+            } //End foreach
+
+            $notification = array(
+                'message' => "New Property Multi Image Added Successfully",
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);
+        }else{
+            $notification = array(
+                'message' => "Nothing To Update",
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        } //End else
     }
 }
