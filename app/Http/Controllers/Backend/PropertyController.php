@@ -300,7 +300,7 @@ class PropertyController extends Controller
             );
             return redirect()->back()->with($notification);
         } //End else
-    }
+    } //End Method
 
     public function UpdatePropertyFacilities(Request $request){
         $property_id = $request->id;
@@ -329,5 +329,44 @@ class PropertyController extends Controller
             );
             return redirect()->back()->with($notification);
         } //End else
+    } //End Method
+
+    public function DeleteProperty($id){
+        $property = Property::findOrFail($id);
+        $thambnail = $property->property_thambnail;
+        if(file_exists('uploads/property/thambnail/'.$thambnail)){
+            unlink('uploads/property/thambnail/'.$thambnail);
+        }
+        Property::findOrFail($id)->delete();
+
+        $multiImage = MultiImage::where('property_id', $id)->get();
+        foreach($multiImage as $img){
+            if(file_exists('uploads/property/multi_img/'.$img->photo_name)){
+                unlink('uploads/property/multi_img/'.$img->photo_name);
+            }
+            MultiImage::where('property_id', $id)->delete();
+        }
+
+        Facility::where('property_id', $id)->delete();
+
+        $notification = array(
+            'message' => "Property Deleted Successfully",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    } //End Method
+
+    public function DetailsProperty($id){
+        $property = Property::findOrFail($id);
+        $data = $property->amenities_id;        
+        $ame_data = explode(',', $data);      //Convert string to array && Show all selected value
+
+        $facilities = Facility::where('property_id', $id)->get();
+        $multiImage = MultiImage::where('property_id', $id)->get();
+        $propertyType = PropertyType::latest()->get();
+        // dd($property->property_status);
+        $amenities = Amenities::latest()->get();
+        $activeAgent = User::where('status', 'active')->where('role', 'agent')->latest()->get();
+        return view('backend.property.details_property', compact('property', 'propertyType', 'amenities', 'activeAgent', 'ame_data', 'multiImage', 'facilities'));
     } //End Method
 }
