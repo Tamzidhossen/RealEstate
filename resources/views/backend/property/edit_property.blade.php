@@ -308,11 +308,13 @@
         <div class="card">
             <div class="card-body">
                 <h6 class="card-title">Edit Property Facility</h6>
-                <form method="POST" action="{{ route('update.property.thambnail') }}" id="myForm" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('update.property.facilities') }}" id="myForm" enctype="multipart/form-data">
                     @csrf
-
+                    <input type="hidden" name="id" value="{{ $property->id }}">
                     {{-- /////////////////// Start Facilities Options ///////////////--}}
-                    @foreach ($facilities as $item)    
+                    @foreach ($facilities as $item)
+                    <div class="row add_item">
+                    <div class="whole_extra_item_add" id="whole_extra_item_add">
                     <div class="whole_extra_item_delete" id="whole_extra_item_delete">
                         <div class="mt-1">
                             <div class="row">
@@ -344,9 +346,11 @@
                             </div>
                         </div>
                     </div>
+                    </div>
+                    </div>
                     @endforeach
                     {{-- ////////////////// End Facilities Options //////////////////--}}
-                    
+                    <input type="submit" class="btn btn-primary mt-3" value="Save Changes">
                 </form>
             </div>
         </div>

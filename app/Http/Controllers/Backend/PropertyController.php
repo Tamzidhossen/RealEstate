@@ -301,4 +301,33 @@ class PropertyController extends Controller
             return redirect()->back()->with($notification);
         } //End else
     }
+
+    public function UpdatePropertyFacilities(Request $request){
+        $property_id = $request->id;
+
+        if($request->facility_name == NULL){
+            $notification = array(
+                'message' => "You Have To Add Facility Name",
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }else{
+            Facility::where('property_id', $property_id)->delete();
+
+            $facilities = count($request->facility_name);
+            for($i=0; $i < $facilities; $i++){
+                $cnt = new Facility();
+                $cnt->property_id = $property_id;
+                $cnt->facility_name = $request->facility_name[$i];
+                $cnt->distance = $request->distance[$i];
+                $cnt->save();
+            }
+
+            $notification = array(
+                'message' => "Property Facilities Updated Successfully",
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);
+        } //End else
+    } //End Method
 }
