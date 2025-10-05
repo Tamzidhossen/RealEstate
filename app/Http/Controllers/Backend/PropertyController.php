@@ -369,4 +369,27 @@ class PropertyController extends Controller
         $activeAgent = User::where('status', 'active')->where('role', 'agent')->latest()->get();
         return view('backend.property.details_property', compact('property', 'propertyType', 'amenities', 'activeAgent', 'ame_data', 'multiImage', 'facilities'));
     } //End Method
+
+    public function PropertyStatus($id){
+        $property = Property::findOrFail($id);
+        if($property->status == 1){
+            Property::findOrFail($id)->update([
+                'status' => 0,
+            ]);
+            $notification = array(
+                'message' => "Property Deactivated Successfully",
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);
+        }else{
+            Property::findOrFail($id)->update([
+                'status' => 1,
+            ]);
+            $notification = array(
+                'message' => "Property Activated Successfully",
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);
+        }
+    } //End Method
 }

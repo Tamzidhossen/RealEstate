@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Route;
 
 // User Frontend All Routes
@@ -42,7 +43,9 @@ Route::middleware(['auth', 'role:agent'])->group(function(){
 
 }); // End Group Agent Middleware
 
-Route::get('/admin/login', [AdminController::class, 'AdminLogin'])->name('admin.login');
+Route::get('/agent/login', [AgentController::class, 'AgentLogin'])->name('agent.login')->middleware(RedirectIfAuthenticated::class);
+
+Route::get('/admin/login', [AdminController::class, 'AdminLogin'])->name('admin.login')->middleware(RedirectIfAuthenticated::class);
 
 // Start Group Admin Middleware
 Route::middleware(['auth', 'role:admin'])->group(function(){
@@ -81,6 +84,7 @@ Route::middleware(['auth', 'role:admin'])->group(function(){
         Route::post('/update/property/facilities', 'UpdatePropertyFacilities')->name('update.property.facilities');
         Route::get('/delete/property/{id}', 'DeleteProperty')->name('delete.property');
         Route::get('/details/property/{id}', 'DetailsProperty')->name('details.property');
+        Route::get('/property/status/{id}', 'PropertyStatus')->name('property.status');
     });
 
 }); // End Group Admin Middleware
