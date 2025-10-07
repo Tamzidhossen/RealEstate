@@ -43,6 +43,8 @@ Route::middleware(['auth', 'role:agent'])->group(function(){
     Route::get('/agent/logout', [AgentController::class, 'AgentLogout'])->name('agent.logout');
     Route::get('/agent/profile', [AgentController::class, 'AgentProfile'])->name('agent.profile');
     Route::post('/agent/profile/store', [AgentController::class, 'AgentProfileStore'])->name('agent.profile.store');
+    Route::get('/agent/change/password', [AgentController::class, 'AdminChangePassword'])->name('agent.change.password');
+    Route::post('/agent/update/password', [AgentController::class, 'AdminUpdatePassword'])->name('agent.update.password');
 
 }); // End Group Agent Middleware
 
@@ -89,6 +91,16 @@ Route::middleware(['auth', 'role:admin'])->group(function(){
         Route::get('/delete/property/{id}', 'DeleteProperty')->name('delete.property');
         Route::get('/details/property/{id}', 'DetailsProperty')->name('details.property');
         Route::get('/property/status/{id}', 'PropertyStatus')->name('property.status');
+    });
+
+    //Agent All Route Form Admin -> Group Controller
+    Route::controller(AdminController::class)->group(function(){
+        Route::get('/all/agent', 'AllAgent')->name('all.agent');
+        Route::get('/add/agent', 'AddAgent')->name('add.agent');
+        Route::post('/store/agent', 'StoreAgent')->name('store.agent');
+        Route::get('/edit/agent/{id}', 'EditAgent')->name('edit.agent');
+        Route::post('/update/agent/{id}', 'UpdateAgent')->name('update.agent');
+        Route::get('/delete/agent/{id}', 'DeleteAgent')->name('delete.agent');
     });
 
 }); // End Group Admin Middleware

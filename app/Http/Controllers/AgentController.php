@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AgentController extends Controller
 {
@@ -82,4 +83,38 @@ class AgentController extends Controller
         );
         return back()->with($notification);
     } // End Method
+
+    public function AdminChangePassword(){
+        $profileData = User::find(Auth::user()->id);
+        return view('agent.agent_change_password', compact('profileData'));
+    } // End Method
+
+    public function AdminUpdatePassword(Request $request){
+
+        //validation
+        $request->validate([
+            'old_password' => 'required',
+            'password' => 'required|confirmed'
+        ]);
+
+        //Match The Old Password
+        if(!Hash::check($request->old_password, Auth::user()->password)){
+            $notification = array(
+                'message' => "Agent Password Does not Match!",
+                'alert-type' => 'error'
+            );
+            return back()->with($notification);
+        }
+
+        //Update The New Password
+        User::whereId(Auth::user()->id)->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        $notification = array(
+            'message' => "Password Update Successfully",
+            'alert-type' => 'success'
+        );
+        return back()->with($notification);
+    }  // End Method
 }

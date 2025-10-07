@@ -30,13 +30,13 @@ class AdminController extends Controller
     public function AdminLogin(){
         return view('admin.admin_login');
 
-    }
+    } // End Method
 
     public function AdminProfile(){
         $id = Auth::user()->id;
         $profileData = User::find($id);
         return view('admin.admin_profile_view', compact('profileData'));
-    }
+    }  // End Method
 
     public function AdminProfileStore(Request $request){
         $profileData = User::find(Auth::user()->id);
@@ -66,12 +66,12 @@ class AdminController extends Controller
             'alert-type' => 'success'
         );
         return back()->with($notification);
-    }
+    } // End Method
     
     public function AdminChangePassword(){
         $profileData = User::find(Auth::user()->id);
         return view('admin.admin_change_password', compact('profileData'));
-    }
+    } // End Method
 
     public function AdminUpdatePassword(Request $request){
 
@@ -100,5 +100,63 @@ class AdminController extends Controller
             'alert-type' => 'success'
         );
         return back()->with($notification);
-    }
+    }   // End Method
+
+    //////// Agent All Method From Admin //////////
+    public function AllAgent(){
+        $agents = User::where('role', 'agent')->get();
+        return view('backend.agentuser.all_agent', compact('agents'));
+    }   // End Method
+
+    public function AddAgent(){
+        return view('backend.agentuser.add_agent');
+    }   // End Method
+
+    public function StoreAgent(Request $request) {
+        User::insert([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'password' => Hash::make($request->password),
+            'role' => 'agent',
+            'status' => 'active',
+        ]);
+
+        $notification = array(
+            'message' => "Agent Add Successfully",
+            'alert-type' => 'success'
+        );
+        return redirect()->route('all.agent')->with($notification);
+    } // End Method
+
+    public function EditAgent($id){
+        $agent = User::findOrFail($id);
+        return view('backend.agentuser.edit_agent', compact('agent'));
+    } // End Method
+
+    public function UpdateAgent(Request $request, $id) {
+        User::findOrFail($id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+        ]);
+
+        $notification = array(
+            'message' => "Agent Updated Successfully",
+            'alert-type' => 'success'
+        );
+        return redirect()->route('all.agent')->with($notification);
+    } // End Method
+
+    public function DeleteAgent($id) {
+        User::findOrFail($id)->delete();
+
+        $notification = array(
+            'message' => "Agent Delete Successfully",
+            'alert-type' => 'success'
+        );
+        return redirect()->route('all.agent')->with($notification);
+    } // End Method
 }
