@@ -159,4 +159,28 @@ class AdminController extends Controller
         );
         return redirect()->route('all.agent')->with($notification);
     } // End Method
+
+    public function ChangeStatus($id){
+        $property = User::findOrFail($id);
+        // return $property;
+        if($property->status == 'active'){
+            User::findOrFail($id)->update([
+                'status' => 'inactive',
+            ]);
+            $notification = array(
+                'message' => "Property Deactivated Successfully",
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);
+        }else{
+            User::findOrFail($id)->update([
+                'status' => 'active',
+            ]);
+            $notification = array(
+                'message' => "Property Activated Successfully",
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);
+        }
+    } //End Method
 }

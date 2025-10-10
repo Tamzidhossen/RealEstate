@@ -1,3 +1,9 @@
+@php
+  $id = Auth::user()->id;
+  $agentData = App\Models\User::find($id);
+  $agentStatus = $agentData->status;
+@endphp
+
 <nav class="sidebar">
     <div class="sidebar-header">
       <a href="#" class="sidebar-brand">
@@ -18,6 +24,8 @@
             <span class="link-title">Dashboard</span>
           </a>
         </li>
+        @if ($agentStatus === 'active')
+
         <li class="nav-item nav-category">RealEstate</li>
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#emails" role="button" aria-expanded="false" aria-controls="emails">
@@ -36,49 +44,7 @@
             </ul>
           </div>
         </li>
-
-        <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="collapse" href="#amenitie" role="button" aria-expanded="false" aria-controls="emails">
-            <i class="link-icon" data-feather="mail"></i>
-            <span class="link-title">Amenitie</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="amenitie">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{ route('all.amenitie') }}" class="nav-link">All Amenitie</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('add.amenitie') }}" class="nav-link">Add Amenitie</a>
-              </li>
-            </ul>
-          </div>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="collapse" href="#property" role="button" aria-expanded="false" aria-controls="emails">
-            <i class="link-icon" data-feather="mail"></i>
-            <span class="link-title">Property</span>
-            <i class="link-arrow" data-feather="chevron-down"></i>
-          </a>
-          <div class="collapse" id="property">
-            <ul class="nav sub-menu">
-              <li class="nav-item">
-                <a href="{{ route('all.property') }}" class="nav-link">All Property</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('add.property') }}" class="nav-link">Add Property</a>
-              </li>
-            </ul>
-          </div>
-        </li>
-
-        <li class="nav-item">
-          <a href="pages/apps/calendar.html" class="nav-link">
-            <i class="link-icon" data-feather="calendar"></i>
-            <span class="link-title">Calendar</span>
-          </a>
-        </li>
+        
         <li class="nav-item nav-category">Components</li>
         <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#uiComponents" role="button" aria-expanded="false" aria-controls="uiComponents">
@@ -114,6 +80,7 @@
             </ul>
           </div>
         </li>
+        @endif
         <li class="nav-item nav-category">Docs</li>
         <li class="nav-item">
           <a href="#" target="_blank" class="nav-link">

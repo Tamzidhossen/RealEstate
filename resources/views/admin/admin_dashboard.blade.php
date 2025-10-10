@@ -40,6 +40,10 @@
 	<link rel="stylesheet" href="{{ asset('backend/assets') }}/vendors/datatables.net-bs5/dataTables.bootstrap5.css">
 	<!-- End plugin css for this page -->
 
+	<!-- Bootstrap Toggle -->
+	<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+	<!-- End Bootstrap Toggle -->
+
   <link rel="shortcut icon" href="{{ asset('backend/assets') }}/images/favicon.png" />
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" >
 </head>
@@ -127,6 +131,10 @@
 	<script src="{{ asset('backend/assets') }}/js/tags-input.js"></script>
 	<!-- End Input Tag -->
 
+	<!-- Bootstrap Toggle -->
+	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+	<!-- End Bootstrap Toggle -->
+	
 	<!-- start Tinymce(Long Description) Tag -->
 	<script src="{{ asset('backend/assets') }}/vendors/tinymce/tinymce.min.js"></script>
 	<script src="{{ asset('backend/assets') }}/js/tinymce.js"></script>
