@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Agent\AgentpropertyController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
@@ -104,5 +105,25 @@ Route::middleware(['auth', 'role:admin'])->group(function(){
 
         Route::get('/change/status/{id}', 'ChangeStatus')->name('change.status');
     });
-
 }); // End Group Admin Middleware
+
+// Start Group Agent Middleware
+Route::middleware(['auth', 'role:agent'])->group(function(){
+    //Property All Route -> Group Controller
+    Route::controller(AgentpropertyController::class)->group(function(){
+        Route::get('agent/all/property', 'AgentAllProperty')->name('agent.all.property');
+        Route::get('agent/add/property', 'AgentAddProperty')->name('agent.add.property');
+        Route::post('agent/store/property', 'AgentStoreProperty')->name('agent.store.property');
+        Route::get('agent/edit/property/{id}', 'AgenteditProperty')->name('agent.edit.property');
+
+        Route::post('/update/agentproperty', 'UpdateAgentProperty')->name('update.agentproperty');
+        Route::post('/update/agentproperty/thambnail', 'UpdateAgentpropertyThambnail')->name('update.agentproperty.thambnail');
+        Route::post('/update/agentproperty/multi_image', 'UpdateAgentpropertyMultiImage')->name('update.agentproperty.multiimage');
+        Route::post('/update/agentproperty/facilities', 'UpdateAgentpropertyFacilities')->name('update.agentproperty.facilities');
+        Route::post('/store/agentnew/multi_image', 'AddAgentnewMultiImage')->name('store.agentnew.multiimage');
+
+        Route::get('/delete/agentproperty/multi_image/{id}', 'DeleteAgentpropertyMultiImage')->name('delete.agentproperty.multiimage');
+        Route::get('/delete/agentproperty/{id}', 'DeleteAgentproperty')->name('delete.agentproperty');
+        Route::get('/details/agentproperty/{id}', 'DetailsAgentproperty')->name('details.agentproperty');
+    });
+}); // End Group Agent Middleware
