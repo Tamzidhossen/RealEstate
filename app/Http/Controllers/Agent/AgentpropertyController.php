@@ -344,4 +344,31 @@ class AgentpropertyController extends Controller
         $amenities = Amenities::latest()->get();
         return view('agent.property.details_property', compact('property', 'propertyType', 'amenities', 'ame_data', 'multiImage', 'facilities'));
     } //End Method
+
+    public function AgentpropertyStatus($id){
+        $property = Property::findOrFail($id);
+        if($property->status == 1){
+            Property::findOrFail($id)->update([
+                'status' => 0,
+            ]);
+            $notification = array(
+                'message' => "Agent Property Deactivated Successfully",
+                'alert-type' => 'success'
+            );
+            return redirect()->route('agent.all.property')->with($notification);
+        }else{
+            Property::findOrFail($id)->update([
+                'status' => 1,
+            ]);
+            $notification = array(
+                'message' => "Agent Property Activated Successfully",
+                'alert-type' => 'success'
+            );
+            return redirect()->route('agent.all.property')->with($notification);
+        }
+    } //End Method
+
+    public function BuyPackage(){
+        return view('agent.package.buy_package');
+    } //End Method
 }

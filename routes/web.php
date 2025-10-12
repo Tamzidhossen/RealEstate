@@ -125,5 +125,14 @@ Route::middleware(['auth', 'role:agent'])->group(function(){
         Route::get('/delete/agentproperty/multi_image/{id}', 'DeleteAgentpropertyMultiImage')->name('delete.agentproperty.multiimage');
         Route::get('/delete/agentproperty/{id}', 'DeleteAgentproperty')->name('delete.agentproperty');
         Route::get('/details/agentproperty/{id}', 'DetailsAgentproperty')->name('details.agentproperty');
+        Route::get('/agentproperty/status/{id}', 'AgentpropertyStatus')->name('agent.property.status');
+    });
+}); // End Group Agent Middleware
+
+// Start Group Agent Middleware
+Route::middleware(['auth', 'role:agent'])->group(function(){
+    //Buy Package All Route -> Group Controller
+    Route::controller(AgentpropertyController::class)->group(function(){
+        Route::get('buy/package', 'BuyPackage')->name('buy.package');
     });
 }); // End Group Agent Middleware

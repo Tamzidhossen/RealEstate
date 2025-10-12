@@ -113,7 +113,7 @@
                         <td>
         <select name="amenities_id[]" class="js-example-basic-multiple form-select" multiple="multiple" data-width="100%">
             @foreach ($amenities as $amenitie)
-                <option value="{{ $amenitie->id }}" {{ (in_array($amenitie->id, $ame_data) ?'selected':'') }}>{{ $amenitie->amenities_name }}</option>
+                <option value="{{ $amenitie->amenities_name }}" {{ (in_array($amenitie->amenities_name, $ame_data) ?'selected':'') }}>{{ $amenitie->amenities_name }}</option>
             @endforeach
         </select>
                         </td>
@@ -128,7 +128,7 @@
                     </tr>
                     <tr>
                         <td>
-        <a href="{{ route('property.status', $property->id) }}" class="btn btn-{{ $property->status==1?'success':'secondary' }}">{{ $property->status==1?'Deactive Now':'Active Now' }}</a>
+        <a href="{{ route('agent.property.status', $property->id) }}" class="btn btn-{{ $property->status==1?'success':'secondary' }}">{{ $property->status==1?'Deactive Now':'Active Now' }}</a>
                         </td>
                     </tr>
                 </tbody>
