@@ -38,18 +38,24 @@
               <li class="nav-item">
                 <a href="{{ route('agent.all.property') }}" class="nav-link">All Property</a>
               </li>
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="{{ route('agent.add.property') }}" class="nav-link">Add Property</a>
-              </li>
+              </li> --}}
             </ul>
           </div>
         </li>
         <li class="nav-item">
-            <a href="{{ route('buy.package') }}" class="nav-link">
-              <i class="link-icon" data-feather="calendar"></i>
-              <span class="link-title">Buy Package</span>
-            </a>
-          </li>
+          <a href="{{ route('buy.package') }}" class="nav-link">
+            <i class="link-icon" data-feather="calendar"></i>
+            <span class="link-title">Buy Package</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('package.history') }}" class="nav-link">
+            <i class="link-icon" data-feather="life-buoy"></i>
+            <span class="link-title">Package History</span>
+          </a>
+        </li>
         
         <li class="nav-item nav-category">Components</li>
         <li class="nav-item">

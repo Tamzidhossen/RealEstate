@@ -92,6 +92,9 @@ Route::middleware(['auth', 'role:admin'])->group(function(){
         Route::get('/delete/property/{id}', 'DeleteProperty')->name('delete.property');
         Route::get('/details/property/{id}', 'DetailsProperty')->name('details.property');
         Route::get('/property/status/{id}', 'PropertyStatus')->name('property.status');
+
+        Route::get('admin.package/history', 'AdminPackageHistory')->name('admin.package.history');
+        Route::get('admin/package/invoice/{id}', 'AdminPackageInvoice')->name('admin.package.invoice');
     });
 
     //Agent All Route Form Admin -> Group Controller
@@ -134,5 +137,13 @@ Route::middleware(['auth', 'role:agent'])->group(function(){
     //Buy Package All Route -> Group Controller
     Route::controller(AgentpropertyController::class)->group(function(){
         Route::get('buy/package', 'BuyPackage')->name('buy.package');
+        Route::get('buy/business/plan', 'BuyBusinessPlan')->name('buy.business.plan');
+        Route::post('store/business/plan', 'StoreBusinessPlan')->name('store.business.plan');
+        Route::get('buy/professional/plan', 'BuyProfessionalPlan')->name('buy.professional.plan');
+        Route::post('store/professional/plan', 'StoreProfessionalPlan')->name('store.professional.plan');
+        
+        Route::get('package/history', 'PackageHistory')->name('package.history');
+        Route::get('agent/package/invoice/{id}', 'AgentPackageInvoice')->name('agent.package.invoice');
+        
     });
 }); // End Group Agent Middleware

@@ -6,15 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Amenities;
 use App\Models\Facility;
 use App\Models\MultiImage;
+use App\Models\PackagePlan;
 use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AgentpropertyController extends Controller
 {
@@ -29,10 +32,28 @@ class AgentpropertyController extends Controller
 
         $propertyType = PropertyType::latest()->get();
         $amenities = Amenities::latest()->get();
-        return view('agent.property.add_property', compact('propertyType', 'amenities'));
+
+        $id = Auth::user()->id;
+        $property = User::where('role', 'agent')->where('id', $id)->first();
+        $pcount = $property->credit;
+        if($pcount == 1 ||  $pcount == 7) {
+            $notification = array(
+                'message' => "You Have To Buy Package First",
+                'alert-type' => 'error'
+            );
+            return redirect()->route('buy.package')->with($notification);
+        } else {
+            return view('agent.property.add_property', compact('propertyType', 'amenities'));
+        }
     } //End Method
 
     public function AgentStoreProperty(Request $request) {
+
+        $id = Auth::user()->id;
+        $find = User::findOrFail($id);
+        $tcp =  $find->credit;
+        // return DB::raw('1 + ' . $tcp);
+
         $data = $request->amenities_id;
         $amenities = implode(',', $data);
         $code = str_pad(random_int(0, 99999), 5, '1', STR_PAD_LEFT);     //Generate 5 digit random number
@@ -114,6 +135,12 @@ class AgentpropertyController extends Controller
                 $cnt->save();
             }
         }
+        ///End Facilities Added From Here ///
+
+        //Credit Update
+        User::where('id', $id)->update([
+            'credit' => DB::raw('1 + '. $tcp),
+        ]);
 
         $notification = array(
             'message' => "Property Inserted Successfully",
@@ -332,6 +359,31 @@ class AgentpropertyController extends Controller
         return redirect()->back()->with($notification);
     } //End Method
 
+    public function DeleteAgentproperty($id){
+        $property = Property::findOrFail($id);
+        $thambnail = $property->property_thambnail;
+        if(file_exists('uploads/property/thambnail/'.$thambnail)){
+            unlink('uploads/property/thambnail/'.$thambnail);
+        }
+        Property::findOrFail($id)->delete();
+
+        $multiImage = MultiImage::where('property_id', $id)->get();
+        foreach($multiImage as $img){
+            if(file_exists('uploads/property/multi_img/'.$img->photo_name)){
+                unlink('uploads/property/multi_img/'.$img->photo_name);
+            }
+            MultiImage::where('property_id', $id)->delete();
+        }
+
+        Facility::where('property_id', $id)->delete();
+
+        $notification = array(
+            'message' => "Property Deleted Successfully",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    } //End Method
+
     public function DetailsAgentproperty($id){
         $property = Property::findOrFail($id);
         $data = $property->amenities_id;        
@@ -371,4 +423,82 @@ class AgentpropertyController extends Controller
     public function BuyPackage(){
         return view('agent.package.buy_package');
     } //End Method
+
+    public function BuyBusinessPlan() {
+        $id = Auth::user()->id;
+        $data = User::find($id);
+        return view('agent.package.business_plan', compact('data'));
+    } //End Method
+
+    public function StoreBusinessPlan(Request $request) {
+        $id = Auth::user()->id;
+        $find = User::findOrFail($id);
+        $tcp =  $find->credit;
+
+        PackagePlan::insert([
+            'user_id' => $id,
+            'package_name' => 'Business',
+            'package_price' => '20',
+            'invoice' => 'Sqr-'.mt_rand(10000000, 99999999),
+            'package_credits' => '3',
+            'created_at' => Carbon::now(),
+        ]);
+
+        User::where('id', $id)->update([
+            'credit' => DB::raw('3 + '. $tcp),
+        ]);
+
+        $notification = array(
+            'message' => "You Have Successfully Purchased Business Plan",
+            'alert-type' => 'success'
+        );
+        return redirect()->route('agent.all.property')->with($notification);
+    } //End Method
+
+    public function BuyProfessionalPlan() {
+        $id = Auth::user()->id;
+        $data = User::find($id);
+        return view('agent.package.professional_plan', compact('data'));
+    } //End Method
+
+    public function StoreProfessionalPlan(Request $request) {
+        $id = Auth::user()->id;
+        $find = User::findOrFail($id);
+        $tcp =  $find->credit;
+
+        PackagePlan::insert([
+            'user_id' => $id,
+            'package_name' => 'Professional',
+            'package_price' => '50',
+            'invoice' => 'Sqr-'.mt_rand(10000000, 99999999),
+            'package_credits' => '10',
+            'created_at' => Carbon::now(),
+        ]);
+
+        User::where('id', $id)->update([
+            'credit' => DB::raw('10 + '. $tcp),
+        ]);
+
+        $notification = array(
+            'message' => "You Have Successfully Purchased Professional Plan",
+            'alert-type' => 'success'
+        );
+        return redirect()->route('agent.all.property')->with($notification);
+    } //End Method
+
+    public function PackageHistory(){
+        $getData = PackagePlan::where('user_id', Auth::user()->id)->get();
+        // return $getData;
+        return view('agent.package.package_history', compact('getData'));
+    }
+
+    public function AgentPackageInvoice($id){
+        $packageHistory = PackagePlan::where('id', $id)->first();
+
+        $pdf = Pdf::loadView('agent.package.pdf_invoice', compact('packageHistory'))->setPaper('a4')->setOption([
+            'tempDir' => public_path(),
+            'chroot' => public_path(),
+        ]);
+        return $pdf->download('invoice.pdf');
+    }
 }

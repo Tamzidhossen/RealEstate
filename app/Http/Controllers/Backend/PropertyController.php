@@ -8,11 +8,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Amenities;
 use App\Models\Facility;
 use App\Models\MultiImage;
+use App\Models\PackagePlan;
 use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PropertyController extends Controller
@@ -392,4 +395,20 @@ class PropertyController extends Controller
             return redirect()->back()->with($notification);
         }
     } //End Method
+
+    public function AdminPackageHistory(){
+        $getData = PackagePlan::all();
+        // return $getData;
+        return view('admin.package.package_history', compact('getData'));
+    }
+
+    public function AdminPackageInvoice($id){
+        $packageHistory = PackagePlan::where('id', $id)->first();
+
+        $pdf = Pdf::loadView('admin.package.pdf_invoice', compact('packageHistory'))->setPaper('a4')->setOption([
+            'tempDir' => public_path(),
+            'chroot' => public_path(),
+        ]);
+        return $pdf->download('invoice.pdf');
+    }
 }
