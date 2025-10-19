@@ -5,6 +5,7 @@ use App\Http\Controllers\Agent\AgentpropertyController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
+use App\Http\Controllers\Fontend\indexController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -147,3 +148,5 @@ Route::middleware(['auth', 'role:agent'])->group(function(){
         
     });
 }); // End Group Agent Middleware
+
+Route::get('property/details/{id}/{slug}', [indexController::class, 'ProopertyDetails'])->name('property.details');

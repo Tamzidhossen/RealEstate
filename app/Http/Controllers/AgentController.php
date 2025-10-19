@@ -7,6 +7,8 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class AgentController extends Controller
 {
@@ -65,17 +67,36 @@ class AgentController extends Controller
         $profileData->phone = $request->phone;
         $profileData->address = $request->address;
 
-        if($request->photo){
-            $file = $request->photo;
-            $delete_form = public_path('uploads/agent_images/'. $profileData->photo);
-            @unlink($delete_form);
-            $extension = $file->extension();
-            $file_name = uniqid().'.'. $extension;
+        // if($request->photo){
+        //     $file = $request->photo;
+        //     $delete_form = public_path('uploads/agent_images/'. $profileData->photo);
+        //     @unlink($delete_form);
+        //     $extension = $file->extension();
+        //     $file_name = uniqid().'.'. $extension;
 
-            $file->move(public_path('uploads/agent_images'), $file_name);
-            $profileData['photo'] = $file_name;
+        //     $file->move(public_path('uploads/agent_images'), $file_name);
+        //     $profileData['photo'] = $file_name;
+        // }
+        // $profileData->save();
+        
+        if(Auth::user()->photo !=null){
+            $delete = public_path('uploads/agent_images/'.Auth::user()->photo);
+            unlink($delete);
         }
-        $profileData->save();
+
+        $photo = $request->photo;
+        $extension =  $photo->extension();
+        $file_name = uniqid().'.'.$extension;
+        // echo $file_name;
+
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($photo);
+        // $image->resize(70, 40);
+        $image->save(public_path('uploads/agent_images/'.$file_name));
+
+        User::find(Auth::id())->update([
+            'photo'=>$file_name,
+        ]);
 
         $notification = array(
             'message' => "Agent Profile Updated Successfully",

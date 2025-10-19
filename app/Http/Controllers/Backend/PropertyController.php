@@ -46,7 +46,7 @@ class PropertyController extends Controller
         // create new manager instance with desired driver
         $manager = new ImageManager(new Driver());
         $image = $manager->read($img);
-        $image->resize(200, 150);
+        $image->resize(370, 250);
         $image->save('uploads/property/thambnail/'.$file_name);
 
         $property_id = Property::insertGetId([      //Return the ID of the inserted item
@@ -198,7 +198,7 @@ class PropertyController extends Controller
         // create new manager instance with desired driver
         $manager = new ImageManager(new Driver());
         $image = $manager->read($img);
-        $image->resize(200, 150);
+        $image->resize(370, 250);
         $image->save('uploads/property/thambnail/'.$file_name);
 
 

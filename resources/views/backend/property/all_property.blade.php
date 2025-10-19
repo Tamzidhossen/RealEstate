@@ -31,7 +31,7 @@
                 @foreach ($property as $key => $item)
                 <tr>
                   <td>{{ $key+1 }}</td>
-                  <td><img src="{{ asset('uploads/property/thambnail') }}/{{ $item->property_thambnail }}"  style="width: 70px height:40px"></td>
+                  <td><img src="{{ asset('uploads/property/thambnail') }}/{{ $item->property_thambnail }}" ></td>
                   <td>{{ $item->property_name }}</td>
                   <td>{{ $item->propertyType->type_name }}</td>
                   <td>{{ $item->property_status }}</td>
