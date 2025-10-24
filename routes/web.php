@@ -6,9 +6,11 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Backend\PropertyController;
 use App\Http\Controllers\Backend\PropertyTypeController;
 use App\Http\Controllers\Fontend\indexController;
+use App\Http\Controllers\Fontend\WishlistController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Models\Wishlist;
 use Illuminate\Support\Facades\Route;
 
 // User Frontend All Routes
@@ -24,6 +26,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/logout', [UserController::class, 'UserLogout'])->name('user.logout');
     Route::get('/user/change/password', [UserController::class, 'UserChangePassword'])->name('user.change.passwore');
     Route::post('/user/password/update', [UserController::class, 'UserPasswordUpdate'])->name('user.password.update');
+
+    //User Wishlist All Route -> Group Controller
+    Route::controller(WishlistController::class)->group(function(){
+        Route::get('/user/wishlist', 'UserWishlist')->name('user.wishlist');
+        Route::get('/get-wishlist-property', 'GetWishlistProperty');
+    });
 });
 
 require __DIR__.'/auth.php';
@@ -150,3 +158,4 @@ Route::middleware(['auth', 'role:agent'])->group(function(){
 }); // End Group Agent Middleware
 
 Route::get('property/details/{id}/{slug}', [indexController::class, 'ProopertyDetails'])->name('property.details');
+Route::post('/add-to-wishlist/{property_id}', [WishlistController::class, 'AddToWishlist']);

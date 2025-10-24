@@ -6,6 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <title>Easy RealEstate</title>
 
 <!-- Fav Icon -->
@@ -113,6 +115,108 @@
 			}
 		@endif 
 	</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        })
+        //Add to Wishlist
+        function AddToWishlist(property_id){
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/add-to-wishlist/"+property_id,
+                success:function(data){
+                    // Start Message
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        
+                        showConfirmButton: false,
+                        timer: 3000 
+                    })
+                    if ($.isEmptyObject(data.error)) {
+                            
+                            Toast.fire({
+                            type: 'success',
+                            icon: 'success', 
+                            title: data.success, 
+                            })
+
+                    }else{
+                    
+                    Toast.fire({
+                        type: 'error',
+                        icon: 'error', 
+                        title: data.error, 
+                        })
+                    }
+                    // End Message
+                }
+            });
+        }
+    </script>
+
+    {{-- Start load wishlist data  --}}
+    <script type="text/javascript">
+        const basePath = "{{ asset('uploads/property/thambnail') }}";
+        function WishlistLoad(){
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: '/get-wishlist-property/',
+
+                success:function(response){
+                    // console.log(response);
+                    // console.log('Full response:', response);
+                    // console.log('Wishlist data:', response.wishlist);
+                    $('#wishQty').text(response.wishQty);
+
+                    let rows = "";
+                    $.each(response.wishlists, function(key,value){
+                        rows += `
+            <div class="deals-block-one">
+                <div class="inner-box">
+                    <div class="image-box">
+                        <figure class="image"><img src="${basePath}/${ value.property.property_thambnail }" alt=""></figure>
+                        <div class="batch"><i class="icon-11"></i></div>
+                        <span class="category">Featured</span>
+                        <div class="buy-btn"><a href="property-details.html">For ${ value.property.property_status}</a></div>
+                    </div>
+                    <div class="lower-content">
+                        <div class="title-text"><h4><a href="property-details.html">${ value.property.property_name}</a></h4></div>
+                        <div class="price-box clearfix">
+                            <div class="price-info pull-left">
+                                <h6>Start From</h6>
+                                <h4>$${ value.property.lowest_price}</h4>
+                            </div>
+                        </div>
+                        <ul class="more-details clearfix">
+                            <li><i class="icon-14"></i>${ value.property.bedrooms} Beds</li>
+                            <li><i class="icon-15"></i>${ value.property.bathrooms} Baths</li>
+                            <li><i class="icon-16"></i>${ value.property.property_size} Sq Ft</li>
+                        </ul>
+                        <div class="other-info-box clearfix">
+                            <ul class="other-option pull-right clearfix">
+                                <li><a href="property-details.html"><i class="icon-13"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div> `;
+
+                    });
+                    // console.log(rows);
+                    $('#wishlist').html(rows);
+                }
+            });
+        }
+        WishlistLoad();
+    </script>
+    {{-- End load wishlist data  --}}
 
 </body><!-- End of .page_wrapper -->
 </html>
