@@ -165,6 +165,7 @@
 
     {{-- Start load wishlist data  --}}
     <script type="text/javascript">
+        //Load Wishlist Data
         const basePath = "{{ asset('uploads/property/thambnail') }}";
         function WishlistLoad(){
             $.ajax({
@@ -173,9 +174,6 @@
                 url: '/get-wishlist-property/',
 
                 success:function(response){
-                    // console.log(response);
-                    // console.log('Full response:', response);
-                    // console.log('Wishlist data:', response.wishlist);
                     $('#wishQty').text(response.wishQty);
 
                     let rows = "";
@@ -218,12 +216,8 @@
             });
         }
         WishlistLoad();
-    </script>
-    {{-- End load wishlist data  --}}
 
-    {{-- Start Add to Compare data --}}
-    <script type="text/javascript">
-        //Add to Compare
+         //Remove to Wishlist
         function RemoveToWishlist(id){
             $.ajax({
                 type: "GET",
@@ -260,7 +254,7 @@
             });
         }
     </script>
-    {{-- End Remove to Wishlist data --}}
+    {{-- End load wishlist data  --}}
 
     {{-- Start Add to Compare data --}}
     <script type="text/javascript">
@@ -301,6 +295,124 @@
         }
     </script>
     {{-- End Add to Compare data --}}
+
+    {{-- Start load Compare data  --}}
+    <script type="text/javascript">
+        //Load Wishlist Data
+        const img = "{{ asset('uploads/property/thambnail') }}";
+        function compare(){
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: '/get-compare-property/',
+
+                success:function(response){
+
+                    let rows = "";
+                    $.each(response, function(key,value){
+                        rows += `<tr>
+                        <th>Property Info</th>
+                        <th>
+                            <figure class="image-box"><img src="${img}/${ value.property.property_thambnail }" alt=""></figure>
+                            <div class="title">${ value.property.property_name }</div>
+                            <div class="price">$${ value.property.lowest_price }</div>
+                        </th>
+                    </tr>  
+                    <tr>
+                        <td>
+                            <p>City</p>
+                        </td>
+                        <td>
+                            <p>${ value.property.city }</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Area</p>
+                        </td>
+                        <td>
+                            <p>${ value.property.property_size } Ft</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Rooms</p>
+                        </td>
+                        <td>
+                            <p>${ value.property.bedrooms }</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Bathrooms</p>
+                        </td>
+                        <td>
+                            <p>${ value.property.bathrooms }</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Garage</p>
+                        </td>
+                        <td>
+                            <p>${ value.property.garage }</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Action</p>
+                        </td>
+                        <td>
+                            <p><a type="submit" class="text-body" id="${ value.id }" onclick="RemoveCompare(this.id)" ><i class="fa fa-trash"></i></a></p>
+                        </td>
+                    </tr> `;
+
+                    });
+                    // console.log(rows);
+                    $('#compare').html(rows);
+                }
+            });
+        }
+        compare();
+
+        //Remove to Compare
+        function RemoveCompare(id){
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "/remove-compare/"+id,
+                success:function(data){
+                    compare();
+                    // Start Message
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        
+                        showConfirmButton: false,
+                        timer: 3000 
+                    })
+                    if ($.isEmptyObject(data.error)) {
+                            
+                            Toast.fire({
+                            type: 'success',
+                            icon: 'success', 
+                            title: data.success, 
+                            })
+
+                    }else{
+                    
+                    Toast.fire({
+                        type: 'error',
+                        icon: 'error', 
+                        title: data.error, 
+                        })
+                    }
+                    // End Message
+                }
+            });
+        }
+    </script>
+    {{-- End load wishlist data  --}}
 
 </body><!-- End of .page_wrapper -->
 </html>

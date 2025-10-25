@@ -8,10 +8,10 @@
             </div>
             <div class="auto-container">
                 <div class="content-box clearfix">
-                    <h1>Property List</h1>
+                    <h1>User WishList</h1>
                     <ul class="bread-crumb clearfix">
-                        <li><a href="index.html">Home</a></li>
-                        <li>Property List</li>
+                        <li><a href="/dashboard">Home</a></li>
+                        <li>User WishList</li>
                     </ul>
                 </div>
             </div>

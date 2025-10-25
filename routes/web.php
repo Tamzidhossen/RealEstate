@@ -34,6 +34,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/get-wishlist-property', 'GetWishlistProperty');
         Route::get('/remove-to-wishlist/{property_id}', 'RemoveToWishlist');
     });
+
+    //User Compare All Route -> Group Controller
+    Route::controller(CompareController::class)->group(function(){
+        Route::get('/user/compare', 'UserCompare')->name('user.compare');
+        Route::get('/get-compare-property', 'GetCompareProperty');
+        Route::get('/remove-compare/{id}', 'RemoveCompare');
+    });
 });
 
 require __DIR__.'/auth.php';
