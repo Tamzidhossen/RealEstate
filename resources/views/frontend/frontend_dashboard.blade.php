@@ -117,6 +117,8 @@
 	</script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    {{-- Start Add to Wishlist data --}}
     <script type="text/javascript">
         $.ajaxSetup({
             headers: {
@@ -159,6 +161,7 @@
             });
         }
     </script>
+    {{-- End Add to Wishlist data --}}
 
     {{-- Start load wishlist data  --}}
     <script type="text/javascript">
@@ -201,7 +204,7 @@
                         </ul>
                         <div class="other-info-box clearfix">
                             <ul class="other-option pull-right clearfix">
-                                <li><a href="property-details.html"><i class="icon-13"></i></a></li>
+                                <li><a type="submit" class="text-body" id="${ value.id }" onclick="RemoveToWishlist(this.id)" ><i class="fa fa-trash"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -217,6 +220,87 @@
         WishlistLoad();
     </script>
     {{-- End load wishlist data  --}}
+
+    {{-- Start Add to Compare data --}}
+    <script type="text/javascript">
+        //Add to Compare
+        function RemoveToWishlist(id){
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "/remove-to-wishlist/"+id,
+                success:function(data){
+                    WishlistLoad();
+                    // Start Message
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        
+                        showConfirmButton: false,
+                        timer: 3000 
+                    })
+                    if ($.isEmptyObject(data.error)) {
+                            
+                            Toast.fire({
+                            type: 'success',
+                            icon: 'success', 
+                            title: data.success, 
+                            })
+
+                    }else{
+                    
+                    Toast.fire({
+                        type: 'error',
+                        icon: 'error', 
+                        title: data.error, 
+                        })
+                    }
+                    // End Message
+                }
+            });
+        }
+    </script>
+    {{-- End Remove to Wishlist data --}}
+
+    {{-- Start Add to Compare data --}}
+    <script type="text/javascript">
+        //Add to Compare
+        function AddToCompare(property_id){
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/add-to-compare/"+property_id,
+                success:function(data){
+                    // Start Message
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        
+                        showConfirmButton: false,
+                        timer: 3000 
+                    })
+                    if ($.isEmptyObject(data.error)) {
+                            
+                            Toast.fire({
+                            type: 'success',
+                            icon: 'success', 
+                            title: data.success, 
+                            })
+
+                    }else{
+                    
+                    Toast.fire({
+                        type: 'error',
+                        icon: 'error', 
+                        title: data.error, 
+                        })
+                    }
+                    // End Message
+                }
+            });
+        }
+    </script>
+    {{-- End Add to Compare data --}}
 
 </body><!-- End of .page_wrapper -->
 </html>

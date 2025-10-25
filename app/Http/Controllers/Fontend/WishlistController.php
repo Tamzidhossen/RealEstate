@@ -46,4 +46,10 @@ class WishlistController extends Controller
         $wishQty = Wishlist::count();
         return response()->json(['wishlists' => $wishlists, 'wishQty' => $wishQty]);
     }
+
+    public function RemoveToWishlist($id){
+        Wishlist::where('user_id', Auth::id())->where('id', $id)->delete();
+
+        return response()->json(['success' => 'Property removed from wishlist']);
+    }
 }
